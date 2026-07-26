@@ -62,3 +62,55 @@ module.exports = {
     fs.unlinkSync(tempPath);
   }
 };
+module.exports = {
+  config: {
+    name: "uptime",
+    version: "1.0",
+    author: "SIAM",
+    countDown: 5,
+    role: 0,
+    shortDescription: "Bot uptime info",
+    longDescription: "Shows bot uptime statistics",
+    category: "system",
+    guide: "{pn}"
+  },
+
+  onStart: async function ({ api, event, threadsData, usersData }) {
+
+    const uptime = process.uptime();
+
+    const days = Math.floor(uptime / (60 * 60 * 24));
+    const hours = Math.floor((uptime % (60 * 60 * 24)) / (60 * 60));
+    const minutes = Math.floor((uptime % (60 * 60)) / 60);
+    const seconds = Math.floor(uptime % 60);
+
+    const ping = Date.now() - event.timestamp;
+
+    const memory = process.memoryUsage().rss / 1024 / 1024;
+
+    const totalUsers = await usersData.getAll();
+    const totalThreads = await threadsData.getAll();
+
+    const date = new Date().toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric"
+    });
+
+    const msg = `
+> 🎀 𝐵𝑜𝑡 𝑈𝑝𝑡𝑖𝑚𝑒 𝐼𝑛𝑓𝑜
+
+🕒 ᴜᴘᴛɪᴍᴇ : ${days}d ${hours}h ${minutes}m ${seconds}s
+📶 ᴘɪɴɢ     : ${ping}ms
+📅 ᴅᴀᴛᴇ    : ${date}
+💻 ᴍᴇᴍᴏʀʏ : ${memory.toFixed(2)} MB
+👥 ᴛᴏᴛᴀʟ ᴜꜱᴇʀꜱ : ${totalUsers.length}
+💬 ᴛᴏᴛᴀʟ ᴛʜʀᴇᴀᴅꜱ : ${totalThreads.length}
+
+👑 ᴏᴡɴᴇʀ : 𝐒𝐈𝐀𝐌
+🤖 ʙᴏᴛ : 𝐒𝐈𝐀𝐌 𝐁ᴏᴛ
+`;
+
+    api.sendMessage(msg, event.threadID, event.messageID);
+  }
+};
