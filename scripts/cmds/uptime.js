@@ -6,7 +6,7 @@ module.exports = {
   config: {
     name: "uptime",
     version: "9.5",
-    author: "SAGOR",
+    author: "𝗦𝗜𝗔𝗠",
     countDown: 5,
     role: 0,
     shortDescription: "Stylish uptime with Canvas bar",
